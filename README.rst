@@ -20,7 +20,7 @@ A thin wrapper for <OPENDOTA/> API
 
 
 * Free software: MIT license
-* Documentation: https://opendota.readthedocs.io.
+* Documentation: https://pyopendota.readthedocs.io.
 
 
 Features

@@ -1,5 +1,5 @@
-pyopendota
-==========
+opendota
+========
 
 .. toctree::
    :maxdepth: 4
