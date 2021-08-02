@@ -3,11 +3,29 @@
 """
 Python Wrapper for <OPENDOTA/> API
 
-* In-built and cusomizable limit to protect against frequent API calls
-* Ability to authenticate using API key
-* Functions for most frequently used API calls
+The OpenDota API provides Dota 2 related data including advanced match data
+extracted from match replays.
 
-API Documentation: https://docs.opendota.com/
+OpenDota API Documentation: https://docs.opendota.com/
+
+About
+-----
+
+The OpenDota class serves as a python interface for the original OpenDota API
+in the form of a thin wrapper. The class assumes some familiarity with the
+OpenDota API.
+
+All method calls return serializable python objects, as return by the API,
+in most cases a dict or a list. Response data is stored as JSON in a local
+directory (Default: ~/dota2), to prevent the load on OpenDota API.
+
+Features
+--------
+
+* Functions for the most frequently used API calls
+* Ability to authenticate using API key
+* In-built and cusomizable limit to protect against frequent API calls
+* Local file-based storage for frequent requests (persistent cache)
 
 @author: Hrishikesh Terdalkar
 """
@@ -36,7 +54,33 @@ FREQ_HIGH = 30
 
 @attr.s
 class OpenDota:
-    """<OPENDOTA/> API"""
+    """
+    <OPENDOTA/> API Interface
+
+    Creates an instance of connection to OpenDota API.
+    All methods return serializable python objects, which are also stored
+    as JSON in the `data_dir` for future calls.
+    All methods take a boolean argument `force` which, if `True`, will fetch
+    the data again even if it is available in the data directory.
+
+    Parameters
+    ----------
+        data_dir: str, (optional)
+            Path to data directory for storing responses to API calls
+            The default is ~/dota2.
+        api_key: str, (optional)
+            If you have an OpenDota API key
+            The default is None.
+        delay: int, (optional)
+            Delay in seconds between two consecutive API calls.
+            It is recommended to keep this at least 3 seconds, to
+            prevent hitting the daily API limit.
+            If you have an API key, this value is ignored.
+            The default is 3.
+        api_url: str, (optional)
+            URL to OpenDota API.
+            It is recommended to not change this value.
+    """
 
     data_dir: str = attr.ib(default=None)
     api_url: str = attr.ib(default="https://api.opendota.com/api", repr=False)
@@ -56,23 +100,25 @@ class OpenDota:
     def request(self, url, *, post=False, data={}, filename=None, force=False):
         """Make a GET or POST request to <OPENDOTA/> API
 
-        Args:
-            url (str):
+        Parameters
+        ----------
+            url: str
                 API path to query
-            post (bool, optional):
+            post: bool, (optional)
                 Make a POST request.
-                Defaults to False.
-            data (dict, optional):
+                The default is False.
+            data: dict, (optional)
                 Query Data.
-                Defaults to {}.
-            filename (str, optional):
+                The default is {}.
+            filename: str, (optional)
                 Save the data to this file.
-                Defaults to None.
-            force (bool, optional):
+                The default is None.
+            force: bool, (optional)
                 Force-fetch and overwrite data.
-                Defaults to False.
+                The default is False.
 
-        Returns:
+        Returns
+        -------
             object:
                 Result of the API call deserialized as a python object
         """
@@ -167,7 +213,8 @@ class OpenDota:
         Get static game data for specified resource(s)
         (mirrored from the dotaconstants repository)
 
-        Args:
+        Parameters
+        ----------
             resource: str or list, indicating name or names of resources
         """
         if resource is not None:
@@ -205,6 +252,7 @@ class OpenDota:
         return self.get(url, filename=filename, force=force)
 
     def get_hero_benchmarks(self, hero_id, force=False):
+        """Get benchmarks for a hero"""
         url = "/benchmarks"
         filename = f"benchmarks_{hero_id}.json"
         data = {"hero_id": hero_id}
@@ -214,6 +262,7 @@ class OpenDota:
     # Leagues
 
     def get_leagues(self, force=False):
+        """Get a list of leagues"""
         url = "/leagues"
         filename = "leagues.json"
         return self.get(url, filename=filename, force=force)
@@ -393,7 +442,8 @@ class OpenDota:
     def get_schema(self, table_name=None, force=False):
         """Get database schema
 
-        Args:
+        Parameters
+        ----------
             table_name: str
                 Get schema for table_name
                 If None, list the available table names
@@ -432,7 +482,8 @@ class OpenDota:
         It is recommended to use utility constants, FREQ_LOW, FREQ_MEDIUM or
         FREQ_HIGH to specifcy frequency.
 
-        Args:
+        Parameters
+        ----------
             frequency: int
                 FREQ_HIGH: update data that only changes frequently
                    (e.g. teams)

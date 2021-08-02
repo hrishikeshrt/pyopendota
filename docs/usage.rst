@@ -6,6 +6,7 @@ To use <OPENDOTA/> API in a project::
 
     import opendota
 
+    # Initialize the API-connection object
     client = opendota.OpenDota()
 
     # Get common entities
@@ -19,9 +20,10 @@ To use <OPENDOTA/> API in a project::
     heroes = client.search_hero('Crystal')
     leagues = client.search_league('International')
 
+    # OpenDota API supports arbitrary PostgreSQL query
     # Database Schema
-    client.get_schema()
-    client.get_schema('matches')
+    client.get_schema()           # Lists all tables
+    client.get_schema('matches')  # Lists schema for a specific table
 
-    # Arbitrary Query
+    # Arbitrary PostgreSQL Query
     client.explorer("select * from matches where limit 1")

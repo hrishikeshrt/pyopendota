@@ -28,7 +28,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="A thin wrapper for <OPENDOTA/> API",
+    description="A python interface for <OPENDOTA/> API",
     entry_points={
         'console_scripts': [
             'opendota=opendota.cli:main',

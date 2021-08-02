@@ -14,9 +14,15 @@
         :alt: Documentation Status
 
 
+A python interface for <OPENDOTA/> API
 
+The :code:`OpenDota` class provided with the package serves as a python
+interface for the original OpenDota API in the form of a thin wrapper.
+The class assumes some familiarity with the OpenDota API.
 
-A thin wrapper for <OPENDOTA/> API
+All method calls return serializable python objects, as return by the API,
+in most cases a dict or a list. Response data is stored as JSON in a local
+directory (Default: :code:`~/dota2`), to prevent the load on OpenDota API.
 
 
 * Free software: MIT license
@@ -39,6 +45,7 @@ To use <OPENDOTA/> API in a project::
 
     import opendota
 
+    # Initialize the API-connection object
     client = opendota.OpenDota()
 
     # Get common entities
@@ -52,18 +59,31 @@ To use <OPENDOTA/> API in a project::
     heroes = client.search_hero('Crystal')
     leagues = client.search_league('International')
 
+    # OpenDota API supports arbitrary PostgreSQL query
     # Database Schema
-    client.get_schema()
-    client.get_schema('matches')
+    client.get_schema()           # Lists all tables
+    client.get_schema('matches')  # Lists schema for a specific table
 
-    # Arbitrary Query
+    # Arbitrary PostgreSQL Query
     client.explorer("select * from matches where limit 1")
+
+
+About OpenDota API
+------------------
+
+The OpenDota API provides Dota 2 related data including advanced match data
+extracted from match replays.
+
+OpenDota API Documentation: https://docs.opendota.com/
 
 
 Credits
 -------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+* This package uses data provided by `The OpenDota API`_.
 
+* This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+
+.. _`The OpenDota API`: https://docs.opendota.com/
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
