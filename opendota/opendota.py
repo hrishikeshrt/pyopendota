@@ -267,6 +267,27 @@ class OpenDota:
         filename = "leagues.json"
         return self.get(url, filename=filename, force=force)
 
+    def get_league(self, league_id, force=False):
+        """Get data for a league"""
+        url = f"/leagues/{league_id}"
+        filename = f"league_{league_id}.json"
+        return self.get(url, filename=filename, force=force)
+
+    # ----------------------------------------------------------------------- #
+    # League Specific
+
+    def get_league_matches(self, league_id, force=False):
+        """Get matches from a league"""
+        url = f"/leagues/{league_id}/matches"
+        filename = f"league_{league_id}_matches.json"
+        return self.get(url, filename=filename, force=force)
+
+    def get_league_teams(self, league_id, force=False):
+        """Get teams from a league"""
+        url = f"/leagues/{league_id}/teams"
+        filename = f"league_{league_id}_teams.json"
+        return self.get(url, filename=filename, force=force)
+
     # ----------------------------------------------------------------------- #
     # Teams
 
