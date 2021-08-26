@@ -128,7 +128,7 @@ class OpenDota:
             path = os.path.join(self.data_dir, filename)
             if not force and os.path.isfile(path):
                 try:
-                    with open(path, "r") as f:
+                    with open(path, "r", encoding="utf-8") as f:
                         json_data = json.load(f)
                     logger.info(
                         f"Loading previously fetched data from '{filename}'."
@@ -300,7 +300,7 @@ class OpenDota:
             filename = f"team_{team['team_id']}.json"
             path = os.path.join(self.data_dir, filename)
 
-            with open(path, "w") as f:
+            with open(path, "w", encoding="utf-8") as f:
                 json.dump(team, f, ensure_ascii=False)
         return teams
 
