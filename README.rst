@@ -36,7 +36,7 @@ Features
 * Ability to authenticate using API key
 * In-built and cusomizable limit to protect against frequent API calls
 * Local file-based storage for frequent requests
-* Basic CLI using `Fire`
+* Basic CLI using :code:`python-fire`
 
 Usage
 -----
@@ -68,7 +68,7 @@ To use <OPENDOTA/> API in a project::
     client.explorer("select * from matches where limit 1")
 
 
-Use <OPENDOTA/> API command line interface (Powered by `python-fire`)::
+Use <OPENDOTA/> API command line interface (Powered by :code:`python-fire`)::
 
     # Information about OpenDota class initialization
     opendota --help

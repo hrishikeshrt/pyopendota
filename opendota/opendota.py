@@ -27,6 +27,7 @@ Features
 * In-built and cusomizable limit to protect against frequent API calls
 * Local file-based storage for frequent requests (persistent cache)
 
+
 @author: Hrishikesh Terdalkar
 """
 
@@ -98,7 +99,8 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
 
     def request(self, url, *, post=False, data={}, filename=None, force=False):
-        """Make a GET or POST request to <OPENDOTA/> API
+        """
+        Make a GET or POST request to <OPENDOTA/> API
 
         Parameters
         ----------
@@ -343,7 +345,7 @@ class OpenDota:
     # Matches
 
     def get_match(self, match_id, force=False):
-        """"Get match data"""
+        """Get match data"""
         url = f"/matches/{match_id}"
         filename = f"match_{match_id}.json"
         return self.get(url, filename=filename, force=force)
@@ -507,15 +509,16 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
 
     def update_data(self, frequency=FREQ_HIGH):
-        """Update core data
-
-        It is recommended to use utility constants, FREQ_LOW, FREQ_MEDIUM or
-        FREQ_HIGH to specifcy frequency.
+        """
+        Update core data
 
         Parameters
         ----------
             frequency: int
-                FREQ_HIGH: update data that only changes frequently
+                It is recommended to use utility constants,
+                FREQ_LOW, FREQ_MEDIUM or FREQ_HIGH to specifcy frequency.
+
+                FREQ_HIGH: update data that changes frequently
                    (e.g. teams)
                 FREQ_MEDIUM: update data that changes with a moderate frequency
                    (e.g. hero benchmarks)

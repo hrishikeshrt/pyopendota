@@ -6,7 +6,6 @@ Console Script for <OPENDOTA/> API
 @author: Hrishikesh Terdalkar
 """
 
-import fire
 from .opendota import OpenDota
 
 ###############################################################################
@@ -17,8 +16,11 @@ def main():
     Console Script for <OPENDOTA/> API
     Powered by `python-fire`
     """
+    import fire
     fire.Fire(OpenDota)
     return 0
+
+###############################################################################
 
 
 if __name__ == "__main__":
