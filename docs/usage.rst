@@ -27,3 +27,16 @@ To use <OPENDOTA/> API in a project::
 
     # Arbitrary PostgreSQL Query
     client.explorer("select * from matches where limit 1")
+
+
+Use <OPENDOTA/> API command line interface (Powered by `python-fire`)::
+
+    # Information about OpenDota class initialization
+    opendota --help
+
+    # Information about OpenDota methods
+    opendota - --help
+
+    # Run methods
+    opendota search_team Virtus
+    opendota get_match 4080778303

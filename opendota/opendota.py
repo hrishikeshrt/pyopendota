@@ -57,7 +57,7 @@ class OpenDota:
     """
     <OPENDOTA/> API Interface
 
-    Creates an instance of connection to OpenDota API.
+    Instance of a connection to OpenDota API.
     All methods return serializable python objects, which are also stored
     as JSON in the `data_dir` for future calls.
     All methods take a boolean argument `force` which, if `True`, will fetch
@@ -88,9 +88,9 @@ class OpenDota:
     delay: int = attr.ib(default=3, repr=False)
 
     def __attrs_post_init__(self):
-        self.session = requests.Session()
+        self._session = requests.Session()
         if self.api_key is not None:
-            self.session.headers['Authorization'] = f'Bearer {self.api_key}'
+            self._session.headers['Authorization'] = f'Bearer {self.api_key}'
         if self.data_dir is None:
             self.data_dir = os.path.join(os.path.expanduser("~"), "dota2")
         os.makedirs(self.data_dir, exist_ok=True)
@@ -151,9 +151,9 @@ class OpenDota:
         logger.info("Query URL:", query_url)
 
         if not post:
-            r = self.session.get(query_url)
+            r = self._session.get(query_url)
         else:
-            r = self.session.post(query_url, data=data)
+            r = self._session.post(query_url, data=data)
 
         content = r.content.decode("utf-8")
         json_data = json.loads(content)
@@ -343,11 +343,13 @@ class OpenDota:
     # Matches
 
     def get_match(self, match_id, force=False):
+        """"Get match data"""
         url = f"/matches/{match_id}"
         filename = f"match_{match_id}.json"
         return self.get(url, filename=filename, force=force)
 
     def get_pro_matches(self, force=False):
+        """Get a list of pro matches"""
         url = "/proMatches"
         filename = "pro_matches.json"
         return self.get(url, filename=filename, force=force)
@@ -367,6 +369,7 @@ class OpenDota:
         return self.get(url, filename=filename, force=force)
 
     def get_pro_players(self, force=False):
+        """Get a list of pro players"""
         url = "/proPlayers"
         filename = "pro_players.json"
         return self.get(url, filename=filename, force=force)
@@ -375,9 +378,15 @@ class OpenDota:
     # Player Specific
 
     def get_player_heroes(self, player_id, force=False):
+        """Get heroes played by a player"""
         url = f"/players/{player_id}/heroes"
         filename = f"player_{player_id}_heroes.json"
         # TODO: Include query parameters
+        # Parameters described in documentation "/players/{account_id}/heroes"
+        # NOTE:
+        # - Difficulty: Parameters would somehow need to be in filename,
+        #               else the cache loses meaning
+        # - Potential Solution: Cache only when no-parameters
         data = {}
         return self.get(url, filename=filename, data=data, force=force)
 

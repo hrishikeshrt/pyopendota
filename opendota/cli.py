@@ -6,12 +6,18 @@ Console Script for <OPENDOTA/> API
 @author: Hrishikesh Terdalkar
 """
 
+import fire
+from .opendota import OpenDota
+
 ###############################################################################
 
 
 def main():
-    """Console Script for <OPENDOTA/> API"""
-    print("Currently not-implemented.")
+    """
+    Console Script for <OPENDOTA/> API
+    Powered by `python-fire`
+    """
+    fire.Fire(OpenDota)
     return 0
 
 
