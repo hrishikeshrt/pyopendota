@@ -489,10 +489,79 @@ class OpenDota:
         return self.get(url, data=data)
 
     # ----------------------------------------------------------------------- #
+    # Fantasy
+
+    def get_fantasy_points(self, match_id, force=False):
+        """Get Fantasy Points of All Players from a Match"""
+        match = self.get_match(match_id, force=force)
+        fantasy_points = []
+
+        for player in match['players']:
+            player_fantasy = {
+                'player_slot': player['player_slot'],
+                'account_id': player['account_id'],
+                'fantasy': {
+                    'kills': {
+                        'value': player['kills']
+                    },
+                    'deaths': {
+                        'value': player['deaths']
+                    },
+                    'assists': {
+                        'value': player['assists']
+                    },
+                    'last_hits': {
+                        'value': player['last_hits'] + player['denies'],
+                    },
+                    'gold_per_min': {
+                        'value': player['gold_per_min'],
+                    },
+                    'tower_kills': {
+                        'value': player['tower_kills'],
+                    },
+                    'roshan_kills': {
+                        'value': player['roshan_kills'],
+                    },
+                    'teamfight': {
+                        'value': player['teamfight_participation'],
+                    },
+                    'wards_placed': {
+                        'value': player['obs_placed'],
+                    },
+                    'camps_stacked': {
+                        'value': player['camps_stacked'],
+                    },
+                    'runes_grabbed': {
+                        'value': player['rune_pickups'],
+                    },
+                    'first_blood': {
+                        'value': int(player['firstblood_claimed']),
+                    },
+                    'stuns': {
+                        'value': player['stuns']
+                    }
+                },
+            }
+
+            for param, obj in player_fantasy['fantasy'].items():
+                obj['score'] = (
+                    self.fantasy.get(f'{param}_base', 0) +
+                    self.fantasy[param] * obj['value']
+                )
+            player_fantasy['total_score'] = sum([
+                obj['score']
+                for obj in player_fantasy['fantasy'].values()
+            ])
+            fantasy_points.append(player_fantasy)
+
+        return fantasy_points
+
+    # ----------------------------------------------------------------------- #
     # Database
 
     def get_schema(self, table_name=None, force=False):
-        """Get database schema
+        """
+        Get database schema
 
         Parameters
         ----------
