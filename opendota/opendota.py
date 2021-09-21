@@ -50,6 +50,25 @@ FREQ_LOW = 10
 FREQ_MEDIUM = 20
 FREQ_HIGH = 30
 
+FANTASY = {
+    'kills': 0.3,
+    'deaths': -0.3,
+    'assists': 0.15,
+    'last_hits': 0.003,
+    'gold_per_min': 0.002,
+    'tower_kills': 1,
+    'roshan_kills': 1,
+    'teamfight': 3,
+    'wards_placed': 0.5,
+    'camps_stacked': 0.5,
+    'runes_grabbed': 0.25,
+    'first_blood': 4.0,
+    'stuns': 0.05,
+
+    # Add '_base' suffix to the parameter for specifying base score
+    'deaths_base': 3,
+}
+
 ###############################################################################
 
 
@@ -87,6 +106,7 @@ class OpenDota:
     api_url: str = attr.ib(default="https://api.opendota.com/api", repr=False)
     api_key: str = attr.ib(default=None, repr=False)
     delay: int = attr.ib(default=3, repr=False)
+    fantasy: dict = attr.ib(default=FANTASY, repr=False)
 
     def __attrs_post_init__(self):
         self._session = requests.Session()
