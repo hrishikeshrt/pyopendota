@@ -97,16 +97,30 @@ class OpenDota:
             prevent hitting the daily API limit.
             If you have an API key, this value is ignored.
             The default is 3.
+        fantasy: dict, (optional)
+            Fantasy DotA2 Configuration
+            Utility constant FANTASY holds the standard values
+            and is used as default.
+            Keys of the fantasy must match those of FANTASY.
+
+            Parameters ending with `_base` are used as base values,
+            while others are used as multipliers.
+            e.g.
+                `deaths` = -0.3
+                `deaths_base` = 3
+            results in the calculation as follows,
+                `death_score` = 3 + (number_of_deaths * -0.3)
+            If `_base` parameter is absent, it's assumed to be 0.
         api_url: str, (optional)
             URL to OpenDota API.
             It is recommended to not change this value.
     """
 
     data_dir: str = attr.ib(default=None)
-    api_url: str = attr.ib(default="https://api.opendota.com/api", repr=False)
     api_key: str = attr.ib(default=None, repr=False)
     delay: int = attr.ib(default=3, repr=False)
     fantasy: dict = attr.ib(default=FANTASY, repr=False)
+    api_url: str = attr.ib(default="https://api.opendota.com/api", repr=False)
 
     def __attrs_post_init__(self):
         self._session = requests.Session()
@@ -492,7 +506,14 @@ class OpenDota:
     # Fantasy
 
     def get_fantasy_points(self, match_id, force=False):
-        """Get Fantasy Points of All Players from a Match"""
+        """
+        Get Fantasy Points of All Players from a Match
+
+        Returns
+        -------
+            list:
+                List of fantasy profiles of players from the specified match
+        """
         match = self.get_match(match_id, force=force)
         fantasy_points = []
 
