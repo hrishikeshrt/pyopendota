@@ -56,14 +56,16 @@ FANTASY = {
     'assists': 0.15,
     'last_hits': 0.003,
     'gold_per_min': 0.002,
+    'xp_per_min': 0.002,
     'tower_kills': 1,
     'roshan_kills': 1,
     'teamfight': 3,
     'wards_placed': 0.5,
     'camps_stacked': 0.5,
     'runes_grabbed': 0.25,
-    'first_blood': 4.0,
-    'stuns': 0.05,
+    'first_blood': 4,
+    'stuns': 0.07,
+    'hero_healing': 0.0004,
 
     # Add '_base' suffix to the parameter for specifying base score
     'deaths_base': 3,
@@ -535,31 +537,37 @@ class OpenDota:
                         'value': player['last_hits'] + player['denies'],
                     },
                     'gold_per_min': {
-                        'value': player['gold_per_min'],
+                        'value': player['gold_per_min']
+                    },
+                    'xp_per_min': {
+                        'value': player['xp_per_min']
                     },
                     'tower_kills': {
-                        'value': player['tower_kills'],
+                        'value': player['tower_kills']
                     },
                     'roshan_kills': {
-                        'value': player['roshan_kills'],
+                        'value': player['roshan_kills']
                     },
                     'teamfight': {
-                        'value': player['teamfight_participation'],
+                        'value': player['teamfight_participation']
                     },
                     'wards_placed': {
-                        'value': player['obs_placed'],
+                        'value': player['obs_placed']
                     },
                     'camps_stacked': {
-                        'value': player['camps_stacked'],
+                        'value': player['camps_stacked']
                     },
                     'runes_grabbed': {
-                        'value': player['rune_pickups'],
+                        'value': player['rune_pickups']
                     },
                     'first_blood': {
-                        'value': int(player['firstblood_claimed']),
+                        'value': int(player['firstblood_claimed'])
                     },
                     'stuns': {
                         'value': player['stuns']
+                    },
+                    'hero_healing': {
+                        'value': player['hero_healing']
                     }
                 },
             }
