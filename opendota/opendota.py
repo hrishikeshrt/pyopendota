@@ -36,13 +36,17 @@ import time
 import json
 import logging
 from urllib.parse import urlsplit, urlunsplit
+from dataclasses import dataclass, field
 
-import attr
 import requests
 
 ###############################################################################
 
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
+
+###############################################################################
+
+OPENDOTA_API_URL = "https://api.opendota.com/api"
 
 ###############################################################################
 
@@ -74,7 +78,7 @@ FANTASY = {
 ###############################################################################
 
 
-@attr.s
+@dataclass
 class OpenDota:
     """
     <OPENDOTA/> API Interface
@@ -118,19 +122,23 @@ class OpenDota:
             It is recommended to not change this value.
     """
 
-    data_dir: str = attr.ib(default=None)
-    api_key: str = attr.ib(default=None, repr=False)
-    delay: int = attr.ib(default=3, repr=False)
-    fantasy: dict = attr.ib(default=FANTASY, repr=False)
-    api_url: str = attr.ib(default="https://api.opendota.com/api", repr=False)
+    data_dir: str = field(default=None)
+    api_key: str = field(default=None, repr=False)
+    delay: int = field(default=3, repr=False)
+    fantasy: dict = field(default=None, repr=False)
+    api_url: str = field(default=OPENDOTA_API_URL, repr=False)
 
-    def __attrs_post_init__(self):
+    def __post_init__(self):
         self._session = requests.Session()
         if self.api_key is not None:
             self._session.headers['Authorization'] = f'Bearer {self.api_key}'
+
         if self.data_dir is None:
             self.data_dir = os.path.join(os.path.expanduser("~"), "dota2")
         os.makedirs(self.data_dir, exist_ok=True)
+
+        if self.fantasy is None:
+            self.fantasy = FANTASY
 
     # ----------------------------------------------------------------------- #
 
@@ -168,7 +176,7 @@ class OpenDota:
                 try:
                     with open(path, "r", encoding="utf-8") as f:
                         json_data = json.load(f)
-                    logger.info(
+                    LOGGER.info(
                         f"Loading previously fetched data from '{filename}'."
                     )
                     return json_data
@@ -186,7 +194,7 @@ class OpenDota:
             url_parts[3] = "&".join([f"{k}={v}" for k, v in data.items()])
 
         query_url = urlunsplit(url_parts)
-        logger.info("Query URL:", query_url)
+        LOGGER.info("Query URL:", query_url)
 
         if not post:
             r = self._session.get(query_url)
@@ -197,7 +205,7 @@ class OpenDota:
         json_data = json.loads(content)
 
         if json_data and "error" in json_data:
-            logger.warning(f"Could not fetch '{url}' ({json_data['error']}).")
+            LOGGER.warning(f"Could not fetch '{url}' ({json_data['error']}).")
             return None
 
         if path is not None:
@@ -228,7 +236,7 @@ class OpenDota:
 
     def request_parse(self, match_id):
         """Submit a new parse request"""
-        logger.info(f"Requesting parse for match {match_id}")
+        LOGGER.info(f"Requesting parse for match {match_id}")
         url = f"/request/{match_id}"
         return self.post(url)
 
@@ -259,7 +267,7 @@ class OpenDota:
             if isinstance(resource, str):
                 resource = [resource]
             if not isinstance(resource, list):
-                logger.error(
+                LOGGER.error(
                     "`resources' must be a string or a list of strings, "
                     f"not `{type(resource)}'"
                 )
@@ -441,8 +449,8 @@ class OpenDota:
                 match_id = match["match_id"]
                 if match["version"] is None or match["version"] < 20:
                     json_data = self.request_parse(match_id)
-                    logger.info("Match ID:", match_id)
-                    logger.info("Job ID:", json_data["job"]["jobId"])
+                    LOGGER.info("Match ID:", match_id)
+                    LOGGER.info("Job ID:", json_data["job"]["jobId"])
         return matches
 
     def get_player_ratings(self, player_id, force=False):
