@@ -27,6 +27,10 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Topic :: Games/Entertainment',
+        'Topic :: Games/Entertainment :: Real Time Strategy'
     ],
     description="A python interface for <OPENDOTA/> API",
     entry_points={
