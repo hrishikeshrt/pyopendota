@@ -71,4 +71,4 @@ Run methods
     opendota search_team Virtus
     opendota get_match 4080778303
 
-*Powered by :code:`python-fire`*
+*Powered by :code:`fire`*

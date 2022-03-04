@@ -48,7 +48,7 @@ Features
 * Ability to authenticate using API key
 * In-built and cusomizable limit to protect against frequent API calls
 * Local file-based storage for frequent requests
-* Basic CLI using :code:`python-fire`
+* Basic CLI using :code:`fire`
 
 Usage
 =====
@@ -123,7 +123,7 @@ Run methods
     opendota search_team Virtus
     opendota get_match 4080778303
 
-*Powered by :code:`python-fire`*
+*Powered by :code:`fire`*
 
 
 About OpenDota API

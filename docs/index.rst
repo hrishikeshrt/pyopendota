@@ -46,7 +46,7 @@ Features
 * Ability to authenticate using API key
 * In-built and cusomizable limit to protect against frequent API calls
 * Local file-based storage for frequent requests
-* Basic CLI using :code:`python-fire`
+* Basic CLI using :code:`fire`
 
 About OpenDota API
 ==================
