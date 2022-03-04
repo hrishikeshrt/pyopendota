@@ -3,16 +3,28 @@
 ===============
 
 
-.. image:: https://img.shields.io/pypi/v/pyopendota.svg
+.. image:: https://img.shields.io/pypi/v/pyopendota?color=success
         :target: https://pypi.python.org/pypi/pyopendota
-
-.. image:: https://img.shields.io/travis/hrishikeshrt/pyopendota.svg
-        :target: https://travis-ci.com/hrishikeshrt/pyopendota
 
 .. image:: https://readthedocs.org/projects/pyopendota/badge/?version=latest
         :target: https://pyopendota.readthedocs.io/en/latest/?version=latest
         :alt: Documentation Status
 
+.. image:: https://img.shields.io/pypi/pyversions/pyopendota
+        :target: https://pypi.python.org/pypi/pyopendota
+        :alt: Python Version Support
+
+.. image:: https://img.shields.io/github/issues/hrishikeshrt/pyopendota
+        :target: https://github.com/hrishikeshrt/pyopendota/issues
+        :alt: GitHub Issues
+
+.. image:: https://img.shields.io/github/followers/hrishikeshrt?style=social
+        :target: https://github.com/hrishikeshrt
+        :alt: GitHub Followers
+
+.. image:: https://img.shields.io/twitter/follow/hrishikeshrt?style=social
+        :target: https://twitter.com/hrishikeshrt
+        :alt: Twitter Followers
 
 A python interface for <OPENDOTA/> API
 
@@ -30,7 +42,7 @@ directory (Default: :code:`~/dota2`), to prevent the load on OpenDota API.
 
 
 Features
---------
+========
 
 * Transparent wrapper for majority of the API calls
 * Ability to authenticate using API key
@@ -39,50 +51,83 @@ Features
 * Basic CLI using :code:`python-fire`
 
 Usage
------
+=====
 
-To use <OPENDOTA/> API in a project::
+Use <OPENDOTA/> API in a project
+--------------------------------
+
+.. code-block:: python
 
     import opendota
 
     # Initialize the API-connection object
     client = opendota.OpenDota()
 
-    # Get common entities
+Get Common Entities
+^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
     client.get_matches('match-id')
     client.get_player('player-id')
     client.get_team('team-id')
 
-    # Search Functionality
+Search Functionality
+^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
     players = client.search_player('Dendi')
     teams = client.search_team('Alliance')
     heroes = client.search_hero('Crystal')
     leagues = client.search_league('International')
 
-    # OpenDota API supports arbitrary PostgreSQL query
-    # Database Schema
+PostgreSQL Query
+^^^^^^^^^^^^^^^^
+
+OpenDota API supports arbitrary PostgreSQL query.
+
+Check Database Schema:
+
+.. code-block:: python
+
     client.get_schema()           # Lists all tables
     client.get_schema('matches')  # Lists schema for a specific table
 
-    # Arbitrary PostgreSQL Query
+Arbitrary PostgreSQL Query:
+
+.. code-block:: python
+
     client.explorer("select * from matches where limit 1")
 
 
-Use <OPENDOTA/> API command line interface (Powered by :code:`python-fire`)::
+Use <OPENDOTA/> API Command Line Interface
+------------------------------------------
 
-    # Information about OpenDota class initialization
+Information about OpenDota class initialization:
+
+.. code-block:: console
+
     opendota --help
 
-    # Information about OpenDota methods
+Information about OpenDota methods:
+
+.. code-block:: console
+
     opendota - --help
 
-    # Run methods
+Run methods
+
+.. code-block:: console
+
     opendota search_team Virtus
     opendota get_match 4080778303
 
+*Powered by :code:`python-fire`*
+
 
 About OpenDota API
-------------------
+==================
 
 The OpenDota API provides Dota 2 related data including advanced match data
 extracted from match replays.
@@ -91,12 +136,8 @@ OpenDota API Documentation: https://docs.opendota.com/
 
 
 Credits
--------
+=======
 
 * This package uses data provided by `The OpenDota API`_.
 
-* This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
 .. _`The OpenDota API`: https://docs.opendota.com/
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
