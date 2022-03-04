@@ -26,15 +26,13 @@ Features
 * Ability to authenticate using API key
 * In-built and cusomizable limit to protect against frequent API calls
 * Local file-based storage for frequent requests (persistent cache)
-
-
-@author: Hrishikesh Terdalkar
 """
 
 import os
 import time
 import json
 import logging
+from typing import Any, List
 from urllib.parse import urlsplit, urlunsplit
 from dataclasses import dataclass, field
 
@@ -85,15 +83,15 @@ class OpenDota:
 
     Instance of a connection to OpenDota API.
     All methods return serializable python objects, which are also stored
-    as JSON in the `data_dir` for future calls.
-    All methods take a boolean argument `force` which, if `True`, will fetch
-    the data again even if it is available in the data directory.
+    as JSON in the :code:`data_dir` for future calls.
+    All methods take a boolean argument :code:`force` which, if True,
+    will fetch the data again even if it is available in the data directory.
 
     Parameters
     ----------
         data_dir: str, (optional)
             Path to data directory for storing responses to API calls
-            The default is ~/dota2.
+            The default is :code:`~/dota2`.
         api_key: str, (optional)
             If you have an OpenDota API key
             The default is None.
@@ -107,16 +105,14 @@ class OpenDota:
             Fantasy DotA2 Configuration
             Utility constant FANTASY holds the standard values
             and is used as default.
-            Keys of the fantasy must match those of FANTASY.
+            Keys of the fantasy must match those of :code:`FANTASY`.
 
-            Parameters ending with `_base` are used as base values,
+            Parameters ending with :code:`_base` are used as base values,
             while others are used as multipliers.
             e.g.
-                `deaths` = -0.3
-                `deaths_base` = 3
-            results in the calculation as follows,
-                `death_score` = 3 + (number_of_deaths * -0.3)
-            If `_base` parameter is absent, it's assumed to be 0.
+            :code:`deaths = -0.3` and :code:`deaths_base = 3` results in the
+            calculation as, :code:`death_score = 3 + (number_of_deaths * -0.3)`
+            If :code:`_base` parameter is absent, it's assumed to be 0.
         api_url: str, (optional)
             URL to OpenDota API.
             It is recommended to not change this value.
@@ -142,7 +138,15 @@ class OpenDota:
 
     # ----------------------------------------------------------------------- #
 
-    def request(self, url, *, post=False, data={}, filename=None, force=False):
+    def request(
+        self,
+        url: str,
+        *,
+        post: bool = False,
+        data: dict = None,
+        filename: str = None,
+        force: bool = False
+    ) -> Any:
         """
         Make a GET or POST request to <OPENDOTA/> API
 
@@ -155,7 +159,7 @@ class OpenDota:
                 The default is False.
             data: dict, (optional)
                 Query Data.
-                The default is {}.
+                The default is None.
             filename: str, (optional)
                 Save the data to this file.
                 The default is None.
@@ -168,7 +172,6 @@ class OpenDota:
             object:
                 Result of the API call deserialized as a python object
         """
-
         path = None
         if filename is not None:
             path = os.path.join(self.data_dir, filename)
@@ -183,6 +186,7 @@ class OpenDota:
                 except Exception:
                     pass
 
+        data = data or {}
         if self.api_key is None:
             time.sleep(self.delay)
         else:
@@ -234,13 +238,13 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Request
 
-    def request_parse(self, match_id):
+    def request_parse(self, match_id: int or str):
         """Submit a new parse request"""
         LOGGER.info(f"Requesting parse for match {match_id}")
         url = f"/request/{match_id}"
         return self.post(url)
 
-    def request_status(self, job_id):
+    def request_status(self, job_id: int or str):
         """Get parse request state"""
         url = f"/request/{job_id}"
         return self.get(url)
@@ -248,20 +252,21 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Static Game Data (mirrored from the dotaconstants repository)
 
-    def get_constant_names(self, force=False):
+    def get_constant_names(self, force: bool = False):
         """Get an array of available resources"""
         url = "/constants"
         filename = "constants.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_constants(self, resource=None, force=False):
+    def get_constants(self, resource: str = None, force: bool = False):
         """
         Get static game data for specified resource(s)
         (mirrored from the dotaconstants repository)
 
         Parameters
         ----------
-            resource: str or list, indicating name or names of resources
+            resource: str or list,
+                Name or names of resources
         """
         if resource is not None:
             if isinstance(resource, str):
@@ -285,19 +290,19 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Hero
 
-    def get_heroes(self, force=False):
+    def get_heroes(self, force: bool = False):
         """Get hero data"""
         url = "/heroes"
         filename = "heroes.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_hero_stats(self, force=False):
+    def get_hero_stats(self, force: bool = False):
         """Get stats about hero performance in recent matches"""
         url = "/heroStats"
         filename = "hero_stats.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_hero_benchmarks(self, hero_id, force=False):
+    def get_hero_benchmarks(self, hero_id: int or str, force: bool = False):
         """Get benchmarks for a hero"""
         url = "/benchmarks"
         filename = f"benchmarks_{hero_id}.json"
@@ -307,13 +312,13 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Leagues
 
-    def get_leagues(self, force=False):
+    def get_leagues(self, force: bool = False):
         """Get a list of leagues"""
         url = "/leagues"
         filename = "leagues.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_league(self, league_id, force=False):
+    def get_league(self, league_id: int or str, force: bool = False):
         """Get data for a league"""
         url = f"/leagues/{league_id}"
         filename = f"league_{league_id}.json"
@@ -322,13 +327,13 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # League Specific
 
-    def get_league_matches(self, league_id, force=False):
+    def get_league_matches(self, league_id: int or str, force: bool = False):
         """Get matches from a league"""
         url = f"/leagues/{league_id}/matches"
         filename = f"league_{league_id}_matches.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_league_teams(self, league_id, force=False):
+    def get_league_teams(self, league_id: int or str, force: bool = False):
         """Get teams from a league"""
         url = f"/leagues/{league_id}/teams"
         filename = f"league_{league_id}_teams.json"
@@ -337,7 +342,7 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Teams
 
-    def get_teams(self, force=False):
+    def get_teams(self, force: bool = False):
         """Get team data"""
         url = "/teams"
         filename = "teams.json"
@@ -350,7 +355,7 @@ class OpenDota:
                 json.dump(team, f, ensure_ascii=False)
         return teams
 
-    def get_team(self, team_id, force=False):
+    def get_team(self, team_id: int or str, force: bool = False):
         """Get data for a team"""
         url = f"/teams/{team_id}"
         filename = f"team_{team_id}.json"
@@ -359,13 +364,18 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Team Specific
 
-    def get_team_matches(self, team_id, force=False):
+    def get_team_matches(self, team_id: int or str, force: bool = False):
         """Get matches for a team"""
         url = f"/teams/{team_id}/matches"
         filename = f"team_{team_id}_matches.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_team_players(self, team_id, current=True, force=False):
+    def get_team_players(
+        self,
+        team_id: int or str,
+        current: bool = True,
+        force: bool = False
+    ):
         """Get players who have played for a team"""
         url = f"/teams/{team_id}/players"
         filename = f"team_{team_id}_players.json"
@@ -379,7 +389,7 @@ class OpenDota:
         else:
             return players
 
-    def get_team_heroes(self, team_id, force=False):
+    def get_team_heroes(self, team_id: int or str, force: bool = False):
         """Get heroes for a team"""
         url = f"/teams/{team_id}/heroes"
         filename = f"team_{team_id}_heroes.json"
@@ -388,13 +398,13 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Matches
 
-    def get_match(self, match_id, force=False):
+    def get_match(self, match_id: int or str, force: bool = False):
         """Get match data"""
         url = f"/matches/{match_id}"
         filename = f"match_{match_id}.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_pro_matches(self, force=False):
+    def get_pro_matches(self, force: bool = False):
         """Get a list of pro matches"""
         url = "/proMatches"
         filename = "pro_matches.json"
@@ -408,13 +418,13 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Players
 
-    def get_player(self, account_id, force=False):
+    def get_player(self, account_id: int or str, force: bool = False):
         """Player data"""
         url = f"/players/{account_id}"
         filename = f"player_{account_id}.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_pro_players(self, force=False):
+    def get_pro_players(self, force: bool = False):
         """Get a list of pro players"""
         url = "/proPlayers"
         filename = "pro_players.json"
@@ -423,7 +433,7 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Player Specific
 
-    def get_player_heroes(self, player_id, force=False):
+    def get_player_heroes(self, player_id: int or str, force: bool = False):
         """Get heroes played by a player"""
         url = f"/players/{player_id}/heroes"
         filename = f"player_{player_id}_heroes.json"
@@ -437,7 +447,11 @@ class OpenDota:
         return self.get(url, filename=filename, data=data, force=force)
 
     def get_player_matches(
-        self, player_id, request_parse=False, days=180, force=False
+        self,
+        player_id: int or str,
+        request_parse: bool = False,
+        days: int = 180,
+        force: bool = False
     ):
         """Matches played by a player"""
         url = f"/players/{player_id}/matches"
@@ -453,13 +467,13 @@ class OpenDota:
                     LOGGER.info("Job ID:", json_data["job"]["jobId"])
         return matches
 
-    def get_player_ratings(self, player_id, force=False):
+    def get_player_ratings(self, player_id: int or str, force: bool = False):
         """Player rating history"""
         url = f"/players/{player_id}/ratings"
         filename = f"player_{player_id}_ratings.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_player_rankings(self, player_id, force=False):
+    def get_player_rankings(self, player_id: int or str, force: bool = False):
         """Player hero rankings"""
         url = f"/players/{player_id}/rankings"
         filename = f"player_{player_id}_rankings.json"
@@ -468,7 +482,12 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Search
 
-    def search_hero(self, search_key=None, attack_type=None, roles=None):
+    def search_hero(
+        self,
+        search_key: str = None,
+        attack_type: str = None,
+        roles: List[str] = None
+    ):
         """Search for a hero by name, attack type or roles"""
         results = []
         for hero in self.get_heroes():
@@ -489,7 +508,7 @@ class OpenDota:
                 results.append(hero)
         return results
 
-    def search_league(self, search_key):
+    def search_league(self, search_key: str):
         """Search for a league"""
         return [
             league
@@ -497,7 +516,7 @@ class OpenDota:
             if search_key.lower() in league["name"].lower()
         ]
 
-    def search_team(self, search_key):
+    def search_team(self, search_key: str):
         """Search for a team by name or tag"""
         return [
             team
@@ -506,7 +525,7 @@ class OpenDota:
             or search_key.lower() == team["tag"].lower()
         ]
 
-    def search_player(self, search_key):
+    def search_player(self, search_key: str):
         """Search for a player"""
         url = "/search"
         data = {"q": search_key}
@@ -515,9 +534,15 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Fantasy
 
-    def get_fantasy_points(self, match_id, force=False):
+    def get_fantasy_points(self, match_id: int or str, force: bool = False):
         """
         Get Fantasy Points of All Players from a Match
+
+        Parameters
+        ----------
+
+        match_id: int or str
+            Match ID
 
         Returns
         -------
@@ -596,7 +621,7 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Database
 
-    def get_schema(self, table_name=None, force=False):
+    def get_schema(self, table_name: str = None, force: bool = False):
         """
         Get database schema
 
@@ -619,7 +644,7 @@ class OpenDota:
                 if table_name == field["table_name"]
             }
 
-    def explorer(self, sql, debug=False):
+    def explorer(self, sql: str, debug: bool = False):
         """Submit arbitrary PostgreSQL queries to the database"""
         url = "/explorer"
         data = {"sql": sql}
@@ -634,7 +659,7 @@ class OpenDota:
 
     # ----------------------------------------------------------------------- #
 
-    def update_data(self, frequency=FREQ_HIGH):
+    def update_data(self, frequency: int = FREQ_HIGH):
         """
         Update core data
 
