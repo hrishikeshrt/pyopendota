@@ -105,7 +105,8 @@ class OpenDota:
             Fantasy DotA2 Configuration
             Utility constant FANTASY holds the standard values
             and is used as default.
-            Keys of the fantasy must match those of :code:`FANTASY`.
+            Keys of the :code:`fantasy` will override the default values.
+            They must be a subset of the keys of :code:`FANTASY`.
 
             Parameters ending with :code:`_base` are used as base values,
             while others are used as multipliers.
@@ -133,8 +134,10 @@ class OpenDota:
             self.data_dir = os.path.join(os.path.expanduser("~"), "dota2")
         os.makedirs(self.data_dir, exist_ok=True)
 
-        if self.fantasy is None:
-            self.fantasy = FANTASY
+        default_fantasy = FANTASY.copy()
+        if self.fantasy is not None:
+            default_fantasy.update(self.fantasy)
+        self.fantasy = default_fantasy
 
     # ----------------------------------------------------------------------- #
 
