@@ -52,25 +52,50 @@ FREQ_LOW = 10
 FREQ_MEDIUM = 20
 FREQ_HIGH = 30
 
+###############################################################################
+# Default Fantasy Multipliers
+
 FANTASY = {
-    'kills': 0.3,
+    'kills': 0.3,             # recommended: 0.15
     'deaths': -0.3,
-    'assists': 0.15,
+    'assists': 0,             # recommended: 0.15
     'last_hits': 0.003,
     'gold_per_min': 0.002,
-    'xp_per_min': 0,
+    'xp_per_min': 0,          # recommended: 0.002
     'tower_kills': 1,
+    'tower_damage': 0,
+    'hero_damage': 0,         # recommended: 0.0002
+    'courier_kills': 0,       # recommended: 1
+    'observer_kills': 0,      # recommended: 0.5
+    'sentry_kills': 0,        # recommended: 0.25
     'roshan_kills': 1,
     'teamfight': 3,
-    'wards_placed': 0.5,
+    'observer_placed': 0.5,
+    'sentry_placed': 0,       # recommended: 0.25
     'camps_stacked': 0.5,
     'runes_grabbed': 0.25,
-    'first_blood': 4,
+    'first_blood': 4,         # recommended: 3
     'stuns': 0.05,
     'hero_healing': 0,
 
     # Add '_base' suffix to the parameter for specifying base score
     'deaths_base': 3,
+}
+
+# TODO: potential metrics
+# - kill_streaks
+# - multi_kills
+
+FANTASY_RECOMMENDED = {
+    'kills': 0.15,
+    'assists': 0.15,
+    'xp_per_min': 0.002,
+    'hero_damage': 0.0002,
+    'courier_kills': 1,
+    'observer_kills': 0.5,
+    'sentry_kills': 0.25,
+    'sentry_placed': 0.25,
+    'first_blood': 3
 }
 
 ###############################################################################
@@ -559,6 +584,7 @@ class OpenDota:
             player_fantasy = {
                 'player_slot': player['player_slot'],
                 'account_id': player['account_id'],
+                'name': player['name'],
                 'fantasy': {
                     'kills': {
                         'value': player['kills']
@@ -581,14 +607,32 @@ class OpenDota:
                     'tower_kills': {
                         'value': player['tower_kills']
                     },
+                    'tower_damage': {
+                        'value': player['tower_damage']
+                    },
+                    'hero_damage': {
+                        'value': player['hero_damage']
+                    },
+                    'courier_kills': {
+                        'value': player['courier_kills']
+                    },
+                    'observer_kills': {
+                        'value': player['observer_kills']
+                    },
+                    'sentry_kills': {
+                        'value': player['sentry_kills']
+                    },
                     'roshan_kills': {
                         'value': player['roshan_kills']
                     },
                     'teamfight': {
                         'value': player['teamfight_participation']
                     },
-                    'wards_placed': {
+                    'observer_placed': {
                         'value': player['obs_placed']
+                    },
+                    'sentry_placed': {
+                        'value': player['sen_placed']
                     },
                     'camps_stacked': {
                         'value': player['camps_stacked']
