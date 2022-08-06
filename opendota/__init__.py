@@ -4,6 +4,6 @@ from opendota.opendota import *
 
 __author__ = """Hrishikesh Terdalkar"""
 __email__ = 'hrishikeshrt@linuxmail.org'
-__version__ = '0.2.4'
+__version__ = '0.2.5'
 
 __all__ = ['OpenDota', 'FREQ_LOW', 'FREQ_MEDIUM', 'FREQ_HIGH']
