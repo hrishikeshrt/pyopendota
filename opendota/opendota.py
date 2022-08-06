@@ -581,10 +581,25 @@ class OpenDota:
         fantasy_points = []
 
         for player in match['players']:
+            player_slot = player['player_slot']
+            player_side = 'radiant' if player['player_slot'] < 5 else 'dire'
+            player_team = match[f'{player_side}_team']
+            player_result = (
+                'win'
+                if match['radiant_win'] == (player_side == 'radiant')
+                else 'loss'
+            )
+
             player_fantasy = {
-                'player_slot': player['player_slot'],
-                'account_id': player['account_id'],
-                'name': player['name'],
+                'player': {
+                    'slot': player_slot,
+                    'side': player_side,
+                    'account_id': player['account_id'],
+                    'team_id': player_team['team_id'],
+                    'name': player['name'],
+                    'team': player_team['name'],
+                    'result': player_result
+                },
                 'fantasy': {
                     'kills': {
                         'value': player['kills']
