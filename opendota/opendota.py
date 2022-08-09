@@ -591,14 +591,22 @@ class OpenDota:
             )
 
             player_fantasy = {
+                'match': {
+                    'match_id': match['match_id'],
+                    'series_id': match['series_id'],
+                    'series_type': match['series_type']
+                },
                 'player': {
+                    'account_id': player['account_id'],
                     'slot': player_slot,
                     'side': player_side,
-                    'account_id': player['account_id'],
-                    'team_id': player_team['team_id'],
                     'name': player['name'],
-                    'team': player_team['name'],
                     'result': player_result
+                },
+                'team': {
+                    'team_id': player_team['team_id'],
+                    'name': player_team['name'],
+                    'tag': player_team['tag']
                 },
                 'fantasy': {
                     'kills': {
