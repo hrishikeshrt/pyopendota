@@ -584,6 +584,7 @@ class OpenDota:
             player_slot = player['player_slot']
             player_side = 'radiant' if player['player_slot'] < 5 else 'dire'
             player_team = match[f'{player_side}_team']
+            player_hero = player['hero_id']
             player_result = (
                 'win'
                 if match['radiant_win'] == (player_side == 'radiant')
@@ -599,6 +600,7 @@ class OpenDota:
                 'player': {
                     'account_id': player['account_id'],
                     'slot': player_slot,
+                    'hero': player_hero,
                     'side': player_side,
                     'name': player['name'],
                     'result': player_result
