@@ -562,7 +562,7 @@ class OpenDota:
     # ----------------------------------------------------------------------- #
     # Fantasy
 
-    def get_fantasy_points(self, match_id: int or str, force: bool = False):
+    def get_match_fantasy(self, match_id: int or str, force: bool = False):
         """
         Get Fantasy Points of All Players from a Match
 
@@ -574,13 +574,14 @@ class OpenDota:
 
         Returns
         -------
-            list:
-                List of fantasy profiles of players from the specified match
+            Dict:
+                Fantasy profiles of players from the specified match
         """
         match = self.get_match(match_id, force=force)
-        fantasy_points = []
+        match_fantasy = {}
 
         for player in match['players']:
+            player_id = player['account_id']
             player_slot = player['player_slot']
             player_side = 'radiant' if player['player_slot'] < 5 else 'dire'
             player_team = match[f'{player_side}_team']
@@ -598,7 +599,7 @@ class OpenDota:
                     'series_type': match['series_type']
                 },
                 'player': {
-                    'account_id': player['account_id'],
+                    'account_id': player_id,
                     'slot': player_slot,
                     'hero': player_hero,
                     'side': player_side,
@@ -686,9 +687,9 @@ class OpenDota:
                 obj['score']
                 for obj in player_fantasy['fantasy'].values()
             ])
-            fantasy_points.append(player_fantasy)
+            match_fantasy[player_id] = player_fantasy
 
-        return fantasy_points
+        return match_fantasy
 
     # ----------------------------------------------------------------------- #
     # Database
