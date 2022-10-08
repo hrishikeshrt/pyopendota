@@ -241,7 +241,7 @@ class OpenDota:
             return None
 
         if path is not None:
-            with open(path, "w") as f:
+            with open(path, "w", encoding='utf-8') as f:
                 json.dump(json_data, f, ensure_ascii=False)
         return json_data
 
