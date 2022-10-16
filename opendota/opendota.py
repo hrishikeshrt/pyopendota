@@ -226,7 +226,7 @@ class OpenDota:
             url_parts[3] = "&".join([f"{k}={v}" for k, v in data.items()])
 
         query_url = urlunsplit(url_parts)
-        LOGGER.info("Query URL:", query_url)
+        LOGGER.info(f"Query URL: {query_url}")
 
         if not post:
             r = self._session.get(query_url)
