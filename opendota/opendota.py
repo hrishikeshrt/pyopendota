@@ -286,7 +286,7 @@ class OpenDota:
         filename = "constants.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_constants(self, resource: str = None, force: bool = False):
+    def get_constants(self, resource: str | List[str] = None, force: bool = False):
         """
         Get static game data for specified resource(s)
         (mirrored from the dotaconstants repository)
