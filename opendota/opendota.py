@@ -432,11 +432,15 @@ class OpenDota:
         filename = f"match_{match_id}.json"
         return self.get(url, filename=filename, force=force)
 
-    def get_pro_matches(self, force: bool = False):
+    def get_pro_matches(self, match_id: int or str = None, force: bool = False):
         """Get a list of pro matches"""
         url = "/proMatches"
         filename = "pro_matches.json"
-        return self.get(url, filename=filename, force=force)
+        data = {}
+        if match_id is not None:
+            data["less_than_match_id"] = match_id
+            filename = f"pro_matches_{match_id}.json"
+        return self.get(url, filename=filename, data=data, force=force)
 
     def get_live(self):
         """Get top currently ongoing live games"""
